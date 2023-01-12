@@ -26,7 +26,12 @@ class AuthService implements IAuthService
 
     public function logout(Request $request)
     {
-        $request->user()->currentAccessToken()->delete();
+        $request->user()->tokens()->delete();
+    }
+
+    public function refresh(Request $request)
+    {
+        $request->user()->tokens()->delete();
     }
 
     public function register(RegisterRequest $request)

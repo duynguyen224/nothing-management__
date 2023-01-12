@@ -18,21 +18,11 @@ class AuthController extends Controller
 {
     private IAuthService $authService;
 
-    /**
-     * Create a new AuthController instance.
-     *
-     * @return void
-     */
     public function __construct(IAuthService $authService)
     {
         $this->authService = $authService;
     }
 
-    /**
-     * Get a JWT via given credentials.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function login(LoginRequest $request)
     {
         $user = $this->authService->login($request);
@@ -44,11 +34,6 @@ class AuthController extends Controller
         return $user; // Error information
     }
 
-    /**
-     * Register a User.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function register(RegisterRequest $request)
     {
         $user = $this->authService->register($request);
@@ -59,44 +44,25 @@ class AuthController extends Controller
         ], 201);
     }
 
-    /**
-     * Log the user out (Invalidate the token).
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function logout(Request $request)
     {
         $this->authService->logout($request);
+
         return response()->json(['message' => 'User successfully signed out']);
     }
 
-    /**
-     * Refresh a token.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function refresh()
+    public function refresh(Request $request)
     {
-        // return $this->createNewToken(Auth::refresh());
+        $this->authService->refresh($request);
+
+        return $this->createNewToken($request->user());
     }
 
-    /**
-     * Get the authenticated User.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function userProfile()
     {
         return response()->json(auth()->user());
     }
 
-    /**
-     * Get the token array structure.
-     *
-     * @param  string $token
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
     protected function createNewToken($user)
     {
         $assignRole = '';
@@ -113,9 +79,10 @@ class AuthController extends Controller
             default:
         }
         return response()->json([
-            'access_token' => $user->createToken('auth_token', [$assignRole])->plainTextToken,
-            'type' => 'bearer',
-            'user' => auth()->user()
+            // 'access_token' => $user->createToken('auth_token', [$assignRole])->plainTextToken,
+            'access_token' => $user->createToken($user->email, [$assignRole])->plainTextToken,
+            'type' => 'Bearer',
+            'user' => auth()->user(),
         ]);
     }
 
