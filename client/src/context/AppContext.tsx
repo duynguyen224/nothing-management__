@@ -7,7 +7,7 @@ export const AppContext = createContext<any>(null);
 
 function AppContextProvider({ children }: Props): React.ReactElement {
     const [state, dispatch] = useReducer(reducer, getInitialState());
-
+    console.log(11111)
     return (
         <AppContext.Provider
             value={{
