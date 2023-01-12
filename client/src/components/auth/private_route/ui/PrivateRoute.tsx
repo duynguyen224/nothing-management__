@@ -6,7 +6,9 @@ import { Props } from '../interface/index';
 const isLogin = (): boolean => {
     const appState = getInitialState();
 
-    if (appState.currentUser?.id == 0) {
+    console.log(appState);
+
+    if (!appState.currentUser) {
         return false;
     }
 

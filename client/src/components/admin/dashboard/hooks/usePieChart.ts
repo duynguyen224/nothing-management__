@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { axiosInstance } from '../../../../configuration/axiosInstance';
+import { getAxiosWithToken } from '../../../../configuration/axiosInstance';
 import { IChartData } from '../interface/pieChart';
 
 function usePieChart() {
@@ -13,7 +13,7 @@ function usePieChart() {
     useEffect(() => {
         //  call data for chart 2022
         const year: number = 2022;
-        axiosInstance()
+        getAxiosWithToken()
             .get(`/api/dashboard/topCategories?year=${year}`)
             .then((res) => {
                 const data: IChartData[] = res.data.map((item: IChartData) => {

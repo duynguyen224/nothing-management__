@@ -21,7 +21,8 @@ class ApplicationJson
             return $next($request);
         }
         return response([
-            'error' => 'Accept type must be application/json'
-        ]);
+            'error' => 'Accept type must be application/json',
+            'status code' => '400'
+        ], 400);
     }
 }

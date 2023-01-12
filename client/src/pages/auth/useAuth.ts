@@ -1,15 +1,16 @@
+import { getAxiosInstance } from './../../configuration/axiosInstance';
 import axios from 'axios';
-import { axiosInstance } from '../../configuration/axiosInstance';
+import { getAxiosWithToken } from '../../configuration/axiosInstance';
 import { IFormInput } from './login/interface';
 
 function useAuth() {
     const handleLogin = (data: IFormInput) => {
-        const res = axios.post(`${process.env.REACT_APP_ROOT_URL}/api/auth/login`, data);
+        const res = getAxiosInstance().post('/api/auth/login', data);
         return res;
     };
 
     const handleLogout = () => {
-        const res = axiosInstance().post(`/api/auth/logout`);
+        const res = getAxiosWithToken().post(`/api/auth/logout`);
         return res;
     };
 

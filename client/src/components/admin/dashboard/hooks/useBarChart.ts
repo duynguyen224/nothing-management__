@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { axiosInstance } from '../../../../configuration/axiosInstance';
+import { getAxiosWithToken } from '../../../../configuration/axiosInstance';
 import { IChartData } from '../interface/barChart';
 import { monthText, monthNumber } from './../../../../configuration/constants/month';
 
@@ -27,7 +27,7 @@ function useBarChart() {
     const [chartData2, setChartData2] = useState<IChartData[] | null>();
 
     useEffect(() => {
-        axiosInstance()
+        getAxiosWithToken()
             .get('/api/dashboard/revenue?year=2021')
             .then((res) => {
                 const data: IChartData[] = res.data.map((item: IChartData) => {
@@ -40,7 +40,7 @@ function useBarChart() {
             });
 
         // call data for chart 2022
-        axiosInstance()
+        getAxiosWithToken()
             .get('/api/dashboard/revenue?year=2022')
             .then((res) => {
                 const data: IChartData[] = res.data.map((item: IChartData) => {
