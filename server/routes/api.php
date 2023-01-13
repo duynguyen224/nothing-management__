@@ -26,16 +26,20 @@ Route::prefix('auth')->group(function () {
 });
 
 Route::middleware(['auth:sanctum'])->group(function () {
-    Route::controller(AuthController::class)->group(function () {
-        Route::get('/auth/logout', 'logout');
-        Route::post('/auth/refresh', 'refresh');
-        Route::get('/auth/user-profile', 'userProfile');
-        Route::post('/auth/change-password', 'changePassword');
+    Route::prefix('auth')->group(function () {
+        Route::controller(AuthController::class)->group(function () {
+            Route::get('/logout', 'logout');
+            Route::post('/refresh', 'refresh');
+            Route::get('/user-profile', 'userProfile');
+            Route::post('/change-password', 'changePassword');
+        });
     });
 
-    Route::controller(UserController::class)->group(function () {
-        Route::get('/users/profile', 'profile');
-        Route::get('/users/block', 'blockUser');
+    Route::prefix('users')->group(function () {
+        Route::controller(UserController::class)->group(function () {
+            Route::get('/profile', 'profile');
+            Route::get('/block', 'blockUser');
+        });
     });
 
     Route::prefix('dashboard')->group(function () {
