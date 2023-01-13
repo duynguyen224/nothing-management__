@@ -18,33 +18,41 @@ use App\Http\Controllers\UserController;
 |
 */
 
-Route::group([
-    'prefix' => 'auth'
-], function ($router) {
-    Route::post('/login', [AuthController::class, 'login']);
-    Route::post('/register', [AuthController::class, 'register']);
+Route::prefix('auth')->group(function () {
+    Route::controller(AuthController::class)->group(function () {
+        Route::post('/login', 'login');
+        Route::post('/register', 'register');
+    });
 });
 
 Route::middleware(['auth:sanctum'])->group(function () {
-    Route::post('/auth/logout', [AuthController::class, 'logout']);
-    Route::post('/auth/refresh', [AuthController::class, 'refresh']);
-    Route::get('/auth/user-profile', [AuthController::class, 'userProfile']);
-    Route::post('/auth/change-password', [AuthController::class, 'changePassword']);
+    Route::controller(AuthController::class)->group(function () {
+        Route::get('/auth/logout', 'logout');
+        Route::post('/auth/refresh', 'refresh');
+        Route::get('/auth/user-profile', 'userProfile');
+        Route::post('/auth/change-password', 'changePassword');
+    });
 
-    Route::get('/users/profile', [UserController::class, 'profile']);
-    Route::get('/users/block', [UserController::class, 'blockUser']);
-
-    Route::prefix('products')->group(function () {
-        Route::get('/', [ProductController::class, 'index']);
-        Route::post('/create', [ProductController::class, 'create']);
-        Route::get('/{id}/detail', [ProductController::class, 'detail']);
-        Route::post('/{id}/update', [ProductController::class, 'update']);
-        Route::delete('/{id}/delete', [ProductController::class, 'delete']);
+    Route::controller(UserController::class)->group(function () {
+        Route::get('/users/profile', 'profile');
+        Route::get('/users/block', 'blockUser');
     });
 
     Route::prefix('dashboard')->group(function () {
-        Route::get('/', [DashboardController::class, 'index']);
-        Route::get('/revenue', [DashboardController::class, 'revenue']);
-        Route::get('/topCategories', [DashboardController::class, 'topCategories']);
+        Route::controller(DashboardController::class)->group(function () {
+            Route::get('/', 'index');
+            Route::get('/revenue', 'revenue');
+            Route::get('/topCategories', 'topCategories');
+        });
+    });
+
+    Route::prefix('products')->group(function () {
+        Route::controller(ProductController::class)->group(function () {
+            Route::get('/', 'index');
+            Route::post('/create', 'create');
+            Route::get('/{id}/detail', 'detail');
+            Route::put('/{id}/update', 'update');
+            Route::delete('/{id}/delete', 'delete');
+        });
     });
 });

@@ -25,23 +25,25 @@ class AuthController extends Controller
 
     public function login(LoginRequest $request)
     {
-        $user = $this->authService->login($request);
+        $res = $this->authService->login($request);
 
-        if ($user instanceof Model) {
-            return $this->createNewToken($user);
+        if ($res instanceof Model) {
+            return $this->createNewToken($res);
         }
 
-        return $user; // Error information
+        return $res; // Error information
     }
 
     public function register(RegisterRequest $request)
     {
-        $user = $this->authService->register($request);
+        return response()->json('Need to implement!');
 
-        return response()->json([
-            'message' => 'User successfully registered',
-            'user' => $user
-        ], 201);
+        // $user = $this->authService->register($request);
+
+        // return response()->json([
+        //     'message' => 'User successfully registered',
+        //     'user' => $user
+        // ], 201);
     }
 
     public function logout(Request $request)

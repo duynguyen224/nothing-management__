@@ -10,7 +10,7 @@ function useAuth() {
     };
 
     const handleLogout = () => {
-        const res = getAxiosWithToken().post(`/api/auth/logout`);
+        const res = getAxiosWithToken().get(`/api/auth/logout`);
         return res;
     };
 

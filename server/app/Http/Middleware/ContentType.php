@@ -23,9 +23,10 @@ class ContentType
             return $next($request);
         }
 
-        return response([
+        return response()->json([
             'error' => 'Content-type must be application/json',
-            'status code' => '400'
+            'status code' => '400',
+            'message' => 'Check data send with POST request, data must be {} if request send without data'
         ], 400);
     }
 }
