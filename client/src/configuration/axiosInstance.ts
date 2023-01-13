@@ -5,7 +5,7 @@ import { getAccessToken } from './../utils/index';
 export const getAxiosInstance = () => {
     return axios.create({
         baseURL: `${process.env.REACT_APP_ROOT_URL}`,
-        headers: { Accept: 'Application/json' }
+        headers: { 'Content-Type': 'application/json' }
     });
 };
 
@@ -16,6 +16,9 @@ export const getAxiosWithToken = () => {
 
     return axios.create({
         baseURL: `${process.env.REACT_APP_ROOT_URL}`,
-        headers: { Authorization: `${authorizationType} ${token}`, Accept: 'Application/json' }
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `${authorizationType} ${token}`
+        }
     });
 };
