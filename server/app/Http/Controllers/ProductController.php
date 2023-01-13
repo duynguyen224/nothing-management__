@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\Direction;
 use App\Models\Product;
 use App\Services\Interface\IProductService;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -16,29 +18,95 @@ class ProductController extends Controller
         $this->productService = $productService;
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $products = DB::table('products')->paginate(2);
-        return response()->json($products, '200');
+        $query = $request->query();
+        $data = array(
+            'search' => $query['search'],
+            'sortDir' => $request->has('sortDir') ? $query['sortDir'] : Direction::DESC,
+            'sortBy' => $request->has('sortBy') ? $query['sortBy'] : 'ID',
+        );
+
+        $result = ['status' => 200];
+        $result['data'] = $this->productService->getList($data);
+
+        return response()->json($result, $result['status']);
     }
 
-    public function create()
+    public function create(Request $request)
     {
-        return 'product create';
+        $data = $request->only([
+            'name', 'price', 'category_id'
+        ]);
+
+        $result = ['status' => 200];
+
+        try {
+            $result['data'] = $this->productService->saveProduct($data);
+        } catch (Exception $ex) {
+            $result = [
+                'status' => 500,
+                'error' => $ex->getMessage()
+            ];
+        }
+
+        return response()->json($result, $result['status']);
     }
 
-    public function detail()
+    public function detail(Request $request)
     {
-        return 'product detail';
+        $productId = intval($request->id);
+
+        $result = ['status' => 200];
+
+        try {
+            $result['data'] = $this->productService->findProductById($productId);
+        } catch (Exception $ex) {
+            $result = [
+                'status' => 500,
+                'error' => $ex->getMessage()
+            ];
+        }
+
+        return response()->json($result, $result['status']);
     }
 
-    public function update()
+    public function update(Request $request)
     {
-        return 'product update';
+        $id = intval($request->id);
+        $data = $request->only([
+            'name', 'price', 'category_id'
+        ]);
+
+        $result = ['status' => 200];
+
+        try {
+            $result['data'] = $this->productService->updateProduct($data, $id);
+        } catch (Exception $ex) {
+            $result = [
+                'status' => 500,
+                'error' => $ex->getMessage()
+            ];
+        }
+
+        return response()->json($result, $result['status']);
     }
 
-    public function delete()
+    public function delete(Request $request)
     {
-        return 'product delete';
+        $id = intval($request->id);
+
+        $result = ['status' => 200];
+
+        try {
+            $result['data'] = $this->productService->deleteProduct($id);
+        } catch (Exception $ex) {
+            $result = [
+                'status' => 500,
+                'error' => $ex->getMessage()
+            ];
+        }
+
+        return response()->json($result, $result['status']);
     }
 }
